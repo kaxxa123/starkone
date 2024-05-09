@@ -16,6 +16,9 @@ This project demonstrated how to message between Ethereum and the Starknet L2.
     # Check the version info included with the compiler-version parameter
 
     scarb --version
+
+    asdf install scarb 2.6.2
+    asdf local scarb 2.6.2
     ```
 
 1. Build the project
