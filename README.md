@@ -140,5 +140,29 @@ calling l1_handler functions so this was a rule of thumb estimate also by estima
 We just invoke the L2 contract function that calls send_message_to_l1_syscall.
 Next we wait for 4 hrs until this is published.
 
-Monitor the status thorugh the explorer: <BR />
+Monitor the status through the explorer: <BR />
 https://sepolia.starkscan.co/tx/0x66837659680e09bbcb0099a4736ee435163289fc62876b495a12798b6d1fef0
+
+Once the transaction is published, call `StarknetMessaging::consumeMessageFromL2()` matching the
+parameters specified by the L2 contract that called `send_message_to_l1_syscall`:
+
+* The L1 transaction sender must match the 1st param of `send_message_to_l1_syscall`.
+
+* The `fromAddress` must match the address of the L2 contract that invoked `send_message_to_l1_syscall`.
+
+* The `payload` must match the 2nd param of  `send_message_to_l1_syscall`.
+
+If any of these conditions are not satisfied the transaction fails, otherwise it succeeds.
+
+```
+StarknetMessaging::consumeMessageFromL2(
+        fromAddress = 0x03d845f90b5c3160fa1e1fede38e4283f5ba4036d3a305220b20f1feee677065
+        payload   = [0x10102020]
+)
+```
+
+Example of successful message consumption: <BR />
+https://sepolia.etherscan.io/tx/0x346a4db7a657cdd52327a24a7c7270d19b5000b6d00eb8a398ee16f1dd3854f8
+
+
+_Consuming a message allows us to ensure that someone feeds the L1 contract with the result generated in L2._
